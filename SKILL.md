@@ -1,6 +1,6 @@
 ---
 name: apple-style
-description: Restyle a web frontend to Apple's design language (apple.com / Apple Store): SF-style typography, restrained ink-and-surface palette, hairline glass materials, pill controls, product-first layout with generous whitespace. Use when asked to make a UI look Apple-like (苹果风格 / 苹果风 / Apple design), to audit an existing app against Apple's visual system, or to build new screens in that style.
+description: Restyle a web frontend to Apple's design language (apple.com / Apple Store) — SF-style typography, restrained ink-and-surface palette, hairline glass materials, pill controls, product-first layout with generous whitespace. Use when asked to make a UI look Apple-like (苹果风格 / 苹果风 / Apple design), to audit an existing app against Apple's visual system, or to build new screens in that style.
 ---
 
 # Apple Style Frontend
