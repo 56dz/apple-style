@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apple Style — 参考页</title>
+<link rel="stylesheet" href="apple.css">
+<style>
+  /* page-local only: everything visual below comes from apple.css */
+  .demo-swatches{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+  .demo-swatch{border-radius:12px;height:64px;border:1px solid var(--ap-hairline)}
+  .demo-swatch-label{font:var(--ap-caption);color:var(--ap-gray);margin-top:6px}
+  .demo-type-row{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--ap-hairline)}
+  .demo-type-row span:first-child{width:110px;flex:none;font:var(--ap-caption);color:var(--ap-gray-3)}
+  .demo-toolbar{position:fixed;right:20px;bottom:20px;z-index:300;display:flex;gap:8px;
+    padding:8px;border-radius:980px;background:var(--ap-nav-bg);
+    -webkit-backdrop-filter:var(--ap-blur);backdrop-filter:var(--ap-blur);
+    box-shadow:var(--ap-shadow-3);border:1px solid var(--ap-nav-border)}
+</style>
+</head>
+<body class="ap-body">
+
+<!-- ============ nav ============ -->
+<nav class="ap-nav" id="nav">
+  <div class="ap-nav-inner">
+    <a class="ap-nav-brand" href="#top">Store</a>
+    <div class="ap-nav-links">
+      <a href="#type">字体</a><a href="#color">颜色</a><a href="#components">组件</a>
+      <a href="#forms">表单</a><a href="#table">表格</a>
+    </div>
+    <div class="ap-row" style="gap:6px">
+      <button class="ap-nav-icon" aria-label="搜索">⌕</button>
+      <button class="ap-nav-icon" aria-label="购物袋">◻</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ hero ============ -->
+<header class="ap-hero" id="top">
+  <h1 class="ap-display-xl ap-balance" style="margin-bottom:14px">Apple Style</h1>
+  <p class="ap-lede ap-balance" style="max-width:700px;margin:0 auto">
+    一套从 apple.com 量出来的前端语言：留白、克制的中性色、单一强调蓝，以及只在大标题上收紧的字距。
+  </p>
+  <div class="ap-hero-actions">
+    <a class="ap-btn ap-btn-primary" href="#components">开始浏览</a>
+    <a class="ap-link ap-link-chevron" href="#tokens">查看设计令牌</a>
+  </div>
+  <div class="ap-card-media ap-hero-media" style="border-radius:28px;background:linear-gradient(180deg,#f5f5f7,#e8e8ed);aspect-ratio:16/7">
+    <span class="ap-muted ap-text-sm">主视觉（16:7 商品图或渐变底）</span>
+  </div>
+</header>
+
+<!-- ============ type ============ -->
+<section class="ap-section" id="type">
+  <div class="ap-container-text">
+    <p class="ap-eyebrow" style="margin-bottom:8px">排版</p>
+    <h2 class="ap-title-1" style="margin-bottom:24px">每一级只有一个用途</h2>
+    <div class="demo-type-row"><span>display-xl</span><span class="ap-display-xl" style="font-size:44px">80 / 600</span></div>
+    <div class="demo-type-row"><span>display</span><span class="ap-display" style="font-size:36px">64 / 600</span></div>
+    <div class="demo-type-row"><span>title-1</span><span class="ap-title-1" style="font-size:30px">48 / 600</span></div>
+    <div class="demo-type-row"><span>title-2</span><span class="ap-title-2" style="font-size:26px">40 / 600</span></div>
+    <div class="demo-type-row"><span>title-3</span><span class="ap-title-3">32 / 600</span></div>
+    <div class="demo-type-row"><span>title-4</span><span class="ap-title-4">24 / 600</span></div>
+    <div class="demo-type-row"><span>body-lg</span><span class="ap-lede">19 / 400 — 一段引导文字</span></div>
+    <div class="demo-type-row"><span>body</span><span class="ap-text">17 / 400 — 正文，行高 1.47，字距 -.022em</span></div>
+    <div class="demo-type-row"><span>body-sm</span><span class="ap-text-sm">14 / 400 — 辅助说明</span></div>
+    <div class="demo-type-row"><span>caption</span><span class="ap-caption">12 / 400 — 法律条款与脚注</span></div>
+  </div>
+</section>
+
+<!-- ============ color ============ -->
+<section class="ap-section ap-section-alt" id="color">
+  <div class="ap-container">
+    <p class="ap-eyebrow" style="margin-bottom:8px">颜色</p>
+    <h2 class="ap-title-2" style="margin-bottom:24px">中性色负责结构，蓝色只负责动作</h2>
+    <div class="demo-swatches">
+      <div><div class="demo-swatch" style="background:#1d1d1f"></div><div class="demo-swatch-label">ink #1d1d1f</div></div>
+      <div><div class="demo-swatch" style="background:#6e6e73"></div><div class="demo-swatch-label">gray #6e6e73</div></div>
+      <div><div class="demo-swatch" style="background:#86868b"></div><div class="demo-swatch-label">gray-3 #86868b</div></div>
+      <div><div class="demo-swatch" style="background:#d2d2d7"></div><div class="demo-swatch-label">hairline #d2d2d7</div></div>
+      <div><div class="demo-swatch" style="background:#f5f5f7"></div><div class="demo-swatch-label">surface #f5f5f7</div></div>
+      <div><div class="demo-swatch" style="background:#0071e3"></div><div class="demo-swatch-label">blue #0071e3</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ components ============ -->
+<section class="ap-section" id="components">
+  <div class="ap-container">
+    <p class="ap-eyebrow" style="margin-bottom:8px">组件</p>
+    <h2 class="ap-title-2" style="margin-bottom:32px">按钮、标签与卡片</h2>
+
+    <div class="ap-row" style="margin-bottom:32px">
+      <button class="ap-btn ap-btn-primary">加入购物袋</button>
+      <button class="ap-btn ap-btn-secondary">了解更多</button>
+      <button class="ap-btn ap-btn-quiet">比较机型</button>
+      <button class="ap-btn ap-btn-dark">深色按钮</button>
+      <button class="ap-btn ap-btn-primary ap-btn-lg">大号按钮</button>
+      <button class="ap-btn ap-btn-primary ap-btn-sm">小号按钮</button>
+      <button class="ap-btn ap-btn-primary" disabled>不可用</button>
+    </div>
+
+    <div class="ap-row" style="margin-bottom:32px">
+      <span class="ap-badge">现货</span>
+      <span class="ap-badge ap-badge-new">新品</span>
+      <button class="ap-chip is-active">iPhone</button>
+      <button class="ap-chip">Mac</button>
+      <button class="ap-chip">iPad</button>
+      <div class="ap-segmented" role="tablist">
+        <button role="tab" aria-selected="true">全部</button>
+        <button role="tab">手机</button>
+        <button role="tab">电脑</button>
+      </div>
+    </div>
+
+    <div class="ap-grid">
+      <article class="ap-card">
+        <div class="ap-card-media"><span class="ap-muted ap-text-sm">4:3 产品图</span></div>
+        <div class="ap-card-body">
+          <h3 class="ap-card-title">MacBook Pro 14 英寸</h3>
+          <p class="ap-card-price">RMB 12,999 起</p>
+          <div class="ap-row" style="margin-top:8px"><a class="ap-btn ap-btn-primary ap-btn-sm" href="#">购买</a>
+          <a class="ap-link ap-link-chevron" href="#">进一步了解</a></div>
+        </div>
+      </article>
+      <article class="ap-card">
+        <div class="ap-card-media"><span class="ap-muted ap-text-sm">4:3 产品图</span></div>
+        <div class="ap-card-body">
+          <h3 class="ap-card-title">iPhone 17 Pro</h3>
+          <p class="ap-card-price">RMB 7,999 起</p>
+          <div class="ap-row" style="margin-top:8px"><a class="ap-btn ap-btn-primary ap-btn-sm" href="#">购买</a>
+          <a class="ap-link ap-link-chevron" href="#">进一步了解</a></div>
+        </div>
+      </article>
+      <article class="ap-card ap-card-flat">
+        <div class="ap-card-body">
+          <h3 class="ap-card-title">以旧换新</h3>
+          <p class="ap-text-sm ap-muted">用符合条件的设备折抵，最高可省 RMB 5,600。</p>
+          <a class="ap-link ap-link-chevron" href="#">估算折抵金额</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ forms ============ -->
+<section class="ap-section ap-section-alt" id="forms">
+  <div class="ap-container-prose">
+    <p class="ap-eyebrow" style="margin-bottom:8px">表单</p>
+    <h2 class="ap-title-2" style="margin-bottom:24px">输入框只在聚焦时出现蓝色</h2>
+    <div class="ap-stack" style="gap:20px">
+      <div class="ap-field">
+        <label class="ap-label" for="f1">邮箱地址</label>
+        <input class="ap-input" id="f1" placeholder="name@example.com">
+        <span class="ap-hint">用于接收订单通知</span>
+      </div>
+      <div class="ap-field">
+        <label class="ap-label" for="f2">所在地区</label>
+        <select class="ap-select" id="f2"><option>中国大陆</option><option>中国香港</option><option>中国台湾</option></select>
+      </div>
+      <div class="ap-field">
+        <label class="ap-label" for="f3">备注</label>
+        <textarea class="ap-textarea" id="f3" placeholder="选填"></textarea>
+      </div>
+      <div class="ap-field">
+        <label class="ap-label" for="f4">错误态示例</label>
+        <input class="ap-input is-invalid" id="f4" value="not-an-email">
+        <span class="ap-error">请输入有效的邮箱地址</span>
+      </div>
+      <label class="ap-row" style="gap:10px">
+        <input class="ap-switch" type="checkbox" checked>
+        <span class="ap-text-sm">接收产品更新通知</span>
+      </label>
+    </div>
+  </div>
+</section>
+
+<!-- ============ table ============ -->
+<section class="ap-section" id="table">
+  <div class="ap-container">
+    <h2 class="ap-title-3" style="margin-bottom:20px">机型对比</h2>
+    <table class="ap-table">
+      <thead><tr><th>机型</th><th>屏幕</th><th>芯片</th><th>起售价</th></tr></thead>
+      <tbody>
+        <tr><td>iPhone 17</td><td>6.3 英寸</td><td>A19</td><td>RMB 5,999</td></tr>
+        <tr><td>iPhone 17 Pro</td><td>6.3 英寸</td><td>A19 Pro</td><td>RMB 7,999</td></tr>
+        <tr><td>iPhone 17 Pro Max</td><td>6.9 英寸</td><td>A19 Pro</td><td>RMB 9,999</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ dark strip ============ -->
+<section class="ap-section ap-hero-dark" id="tokens" style="text-align:center">
+  <h2 class="ap-title-2" style="margin-bottom:12px">深色区块</h2>
+  <p class="ap-lede" style="max-width:640px;margin:0 auto 24px">深色区域用纯黑底 + #f5f5f7 文字，强调蓝切换为 #2997ff。</p>
+  <a class="ap-btn ap-btn-primary" href="#">深色下的主按钮</a>
+</section>
+
+<!-- ============ footer ============ -->
+<footer class="ap-footer">
+  <div class="ap-footer-cols">
+    <div><h4>选购与了解</h4><a href="#">商店</a><a href="#">Mac</a><a href="#">iPad</a><a href="#">iPhone</a></div>
+    <div><h4>账户</h4><a href="#">管理你的 Apple 账户</a><a href="#">Apple Store 账户</a></div>
+    <div><h4>服务</h4><a href="#">Apple Care+</a><a href="#">以旧换新</a><a href="#">分期付款</a></div>
+    <div><h4>关于</h4><a href="#">工作机会</a><a href="#">新闻中心</a><a href="#">隐私政策</a></div>
+  </div>
+  <div class="ap-footer-legal">Copyright © 2026 Apple Style Demo. 保留所有权利。本页为 apple-style skill 的视觉参考，与 Apple Inc. 无关。</div>
+</footer>
+
+<div class="demo-toolbar">
+  <button class="ap-btn ap-btn-quiet ap-btn-sm" id="theme">切换深浅色</button>
+</div>
+
+<script>
+  // sticky nav gets its denser material after 8px of scroll (Apple behavior)
+  var nav = document.getElementById('nav');
+  addEventListener('scroll', function () {
+    nav.classList.toggle('is-scrolled', scrollY > 8);
+  }, { passive: true });
+
+  document.getElementById('theme').addEventListener('click', function () {
+    var root = document.documentElement;
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
+
+  // reveal-on-scroll helper
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.ap-reveal').forEach(function (el) { io.observe(el); });
+</script>
+</body>
+</html>
