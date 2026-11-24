@@ -39,7 +39,10 @@ A card that has a shadow at rest is wrong. Hover is the only way a static card g
 
 ## 3. Motion
 
-Apple's shipped transitions are short and mostly linear-feeling. Reproduce with:
+Apple's motion has **two layers**, and confusing them is why most "Apple-like" UIs feel dead.
+
+**Layer 1 — state changes on the marketing pages.** Short, damped, no overshoot. These are real
+beziers measured out of apple.com/store CSS:
 
 ```css
 :root{
@@ -53,24 +56,85 @@ Apple's shipped transitions are short and mostly linear-feeling. Reproduce with:
 
 | Interaction | Property | Duration | Ease |
 | --- | --- | --- | --- |
-| Button hover/active | background-color, color | 160ms | ease |
+| Button hover | background-color, color | 160ms | ease |
 | Link underline | border-color | 160ms | ease |
 | Card hover lift | transform (2px), box-shadow | 240ms | ease |
 | Nav background on scroll | background-color | 240ms | ease |
-| Modal enter | opacity, transform (scale .98 → 1) | 240ms | ease-out |
-| Sheet enter (mobile) | transform translateY(100%) → 0 | 400ms | ease-out |
 | Image zoom on hover | transform scale(1 → 1.03) | 400ms | ease-out |
 | Accordion | grid-template-rows / max-height | 240ms | ease |
 
-Hard limits:
+**Layer 2 — the "q弹".** The springy feel people recognise from iOS is a *damped spring*
+(`SwiftUI.Spring`), not a bezier. Apple models it with two numbers:
 
-- No duration above 500ms except a hero image cross-fade.
-- No bounce/spring overshoot. `cubic-bezier(.34,1.56,.64,1)` is anti-Apple.
-- No rotation, no spin-in, no staggered list animations longer than 3 items.
+```
+Spring(duration: response, bounce: b)
+  omega0 = 2 * PI / response
+  zeta   = b >= 0 ? 1 - b : 1 / (1 + b)      // damping ratio
+```
+
+Verify against Apple's own documented example — `Spring(duration: 0.5, bounce: 0.3)` gives
+`mass 1, stiffness 157.9, damping 17.6`:
+
+```
+omega0 = sqrt(157.9) = 12.566 = 2*PI/0.5   ✓
+zeta   = 17.6 / (2 * 12.566) = 0.70        ✓  (= 1 - 0.3)
+```
+
+A damped spring has **no cubic-bezier equivalent** — beziers cannot overshoot and re-settle. CSS
+`linear()` can: it takes an arbitrary stop list whose output may exceed 1. So the spring is
+pre-compiled into `linear()` stop lists:
+
+```css
+--ap-spring-snappy: linear(0, 0.045, 0.152, … 1.015, 1.014, … 1);  /* 327ms */
+--ap-spring-smooth: linear(0, 0.036, 0.12,  … 1);                  /* 351ms, no overshoot */
+--ap-spring-bouncy: linear(0, 0.04, 0.137,  … 1.038, 1.037, … 1);  /* 363ms */
+--ap-spring-gentle: linear(0, 0.037, 0.123, … 1.002, 1.001, … 1);  /* 471ms */
+```
+
+| Token | bounce | response | settle | peak | Use |
+| --- | --- | --- | --- | --- | --- |
+| `--ap-spring-snappy` | .20 | .25s | 327ms | 1.015 | press/release, button give, chip select |
+| `--ap-spring-smooth` | .05 | .30s | 351ms | 1.000 | hover lift, nav, generic state change |
+| `--ap-spring-bouncy` | .28 | .30s | 363ms | 1.038 | modal/sheet enter, switch knob, pop-in |
+| `--ap-spring-gentle` | .10 | .40s | 471ms | 1.002 | scroll reveal, expanding panels |
+
+**Regenerate, never hand-edit:**
+
+```bash
+node scripts/spring-easing.mjs --css                      # token block for :root
+node scripts/spring-easing.mjs --bounce .2 --response .3  # one curve
+```
+
+The CSS ships a bezier fallback in `:root` and replaces it inside
+`@supports (transition-timing-function: linear(0,1))`, so engines without `linear()` degrade to a
+plain ease-out instead of breaking.
+
+Usage — always pair the curve with its own duration, because the duration *is* the settle time:
+
+```css
+/* press: the element gives, then springs back */
+.ap-press{transition:transform var(--ap-spring-snappy-dur) var(--ap-spring-snappy)}
+.ap-press:active{transform:scale(.96)}
+
+/* entrance */
+.ap-pop{animation:ap-pop-in var(--ap-spring-bouncy-dur) var(--ap-spring-bouncy) both}
+@keyframes ap-pop-in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+```
+
+Hard limits — these are what keep the bounce from reading as a toy:
+
+- Overshoot is a **ceiling, not a target**: peak ≤ 1.04. `bounce ≥ .4` looks like a game UI.
+- Settle time ≤ 500ms. Raising `bounce` raises settle time too, so a big bounce must use a
+  shorter response.
+- Springs are for **transform and opacity only** — the properties a spring can physically drive.
+  Colour, background and shadow stay on the 160–400ms beziers from layer 1.
+- No spring on scroll-linked or looping motion. No rotation, no spin-in.
+- Never `cubic-bezier(.34,1.56,.64,1)` — that is an overshoot bezier, the wrong tool: it has no
+  settle phase and its shape does not match any spring. Use the tokens instead.
 - Animate only `transform`, `opacity`, `color`, `background-color`, `box-shadow`.
   Never `width`, `height`, `top`, `left`, `margin`.
-- Respect `@media (prefers-reduced-motion: reduce)`: set `transition-duration:.01ms` and drop
-  transform-based hovers.
+- Respect `@media (prefers-reduced-motion: reduce)`: `transition-duration:.01ms` globally, and
+  drop press/lift transforms entirely — springs become instant state changes.
 
 ## 4. Scroll behavior
 

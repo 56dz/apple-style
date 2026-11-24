@@ -12,6 +12,14 @@
   .demo-swatch-label{font:var(--ap-caption);color:var(--ap-gray);margin-top:6px}
   .demo-type-row{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--ap-hairline)}
   .demo-type-row span:first-child{width:110px;flex:none;font:var(--ap-caption);color:var(--ap-gray-3)}
+  .demo-spring-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .demo-spring-cell{background:var(--ap-surface);border-radius:18px;padding:20px;display:flex;
+    flex-direction:column;gap:12px;align-items:flex-start}
+  .demo-spring-ball{width:44px;height:44px;border-radius:50%;background:var(--ap-blue);
+    transition:transform var(--ap-spring-bouncy-dur) var(--ap-spring-bouncy)}
+  .demo-spring-cell.is-run .demo-spring-ball{transform:translateX(140px)}
+  .demo-spring-cell .demo-spring-name{font:var(--ap-body-sm);color:var(--ap-ink)}
+  .demo-spring-cell .demo-spring-meta{font:var(--ap-caption);color:var(--ap-gray-3)}
   .demo-toolbar{position:fixed;right:20px;bottom:20px;z-index:300;display:flex;gap:8px;
     padding:8px;border-radius:980px;background:var(--ap-nav-bg);
     -webkit-backdrop-filter:var(--ap-blur);backdrop-filter:var(--ap-blur);
@@ -26,7 +34,7 @@
     <a class="ap-nav-brand" href="#top">Store</a>
     <div class="ap-nav-links">
       <a href="#type">字体</a><a href="#color">颜色</a><a href="#components">组件</a>
-      <a href="#forms">表单</a><a href="#table">表格</a>
+      <a href="#motion">动效</a><a href="#forms">表单</a><a href="#table">表格</a>
     </div>
     <div class="ap-row" style="gap:6px">
       <button class="ap-nav-icon" aria-label="搜索">⌕</button>
@@ -143,6 +151,71 @@
   </div>
 </section>
 
+<!-- ============ motion ============ -->
+<section class="ap-section" id="motion">
+  <div class="ap-container">
+    <p class="ap-eyebrow" style="margin-bottom:8px">动效</p>
+    <h2 class="ap-title-2" style="margin-bottom:12px">q弹来自弹簧，不来自贝塞尔回弹</h2>
+    <p class="ap-lede" style="max-width:680px;margin-bottom:28px">
+      四条曲线由 SwiftUI 的 <code>Spring(duration:bounce:)</code> 参数生成，编译成 CSS
+      <code>linear()</code> 停靠点。点击任意方块重放，感受超调量从 1.5% 到 3.8% 的差别。
+    </p>
+
+    <div class="demo-spring-grid" id="springs">
+      <div class="demo-spring-cell">
+        <div class="demo-spring-ball"></div>
+        <span class="demo-spring-name">snappy</span>
+        <span class="demo-spring-meta">bounce .2 · response .25s · 327ms · 峰值 1.015</span>
+      </div>
+      <div class="demo-spring-cell">
+        <div class="demo-spring-ball"></div>
+        <span class="demo-spring-name">smooth</span>
+        <span class="demo-spring-meta">bounce .05 · response .3s · 351ms · 无超调</span>
+      </div>
+      <div class="demo-spring-cell">
+        <div class="demo-spring-ball"></div>
+        <span class="demo-spring-name">bouncy</span>
+        <span class="demo-spring-meta">bounce .28 · response .3s · 363ms · 峰值 1.038</span>
+      </div>
+      <div class="demo-spring-cell">
+        <div class="demo-spring-ball"></div>
+        <span class="demo-spring-name">gentle</span>
+        <span class="demo-spring-meta">bounce .1 · response .4s · 471ms · 峰值 1.002</span>
+      </div>
+    </div>
+
+    <div class="ap-row" style="margin-top:28px">
+      <button class="ap-btn ap-btn-primary" id="replay">重放全部</button>
+      <button class="ap-btn ap-btn-secondary ap-press">按住我看回弹</button>
+      <button class="ap-btn ap-btn-quiet" id="popbtn">弹出卡片</button>
+    </div>
+
+    <div class="ap-grid" style="margin-top:24px">
+      <article class="ap-card ap-card-flat ap-reveal-spring">
+        <div class="ap-card-body">
+          <h3 class="ap-card-title">滚动进场</h3>
+          <p class="ap-text-sm ap-muted">.ap-reveal-spring —— 12px 上移 + 0.985 缩放，弹簧落位。</p>
+        </div>
+      </article>
+      <article class="ap-card ap-card-flat ap-reveal-spring">
+        <div class="ap-card-body">
+          <h3 class="ap-card-title">卡片悬停</h3>
+          <p class="ap-text-sm ap-muted">悬停抬升 2px 走 gentle 弹簧，阴影仍用 240ms 缓动。</p>
+        </div>
+      </article>
+      <article class="ap-card ap-card-flat">
+        <div class="ap-card-body">
+          <h3 class="ap-card-title">开关</h3>
+          <label class="ap-row" style="gap:10px">
+            <input class="ap-switch" type="checkbox">
+            <span class="ap-text-sm">bouncy 弹簧推动滑块</span>
+          </label>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
 <!-- ============ forms ============ -->
 <section class="ap-section ap-section-alt" id="forms">
   <div class="ap-container-prose">
@@ -208,6 +281,8 @@
   <div class="ap-footer-legal">Copyright © 2026 Apple Style Demo. 保留所有权利。本页为 apple-style skill 的视觉参考，与 Apple Inc. 无关。</div>
 </footer>
 
+<div id="pop-host"></div>
+
 <div class="demo-toolbar">
   <button class="ap-btn ap-btn-quiet ap-btn-sm" id="theme">切换深浅色</button>
 </div>
@@ -228,7 +303,34 @@
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
   }, { rootMargin: '0px 0px -10% 0px' });
-  document.querySelectorAll('.ap-reveal').forEach(function (el) { io.observe(el); });
+  document.querySelectorAll('.ap-reveal, .ap-reveal-spring').forEach(function (el) { io.observe(el); });
+
+  // spring playground: toggle the translate class, then remove it after settle
+  var cells = Array.prototype.slice.call(document.querySelectorAll('.demo-spring-cell'));
+  function replay(cell) {
+    cell.classList.remove('is-run');
+    void cell.offsetWidth; // force reflow so the transition restarts
+    cell.classList.add('is-run');
+    setTimeout(function () { cell.classList.remove('is-run'); }, 900);
+  }
+  cells.forEach(function (c) { c.addEventListener('click', function () { replay(c); }); });
+  document.getElementById('replay').addEventListener('click', function () {
+    cells.forEach(function (c, i) { setTimeout(function () { replay(c); }, i * 90); });
+  });
+
+  // pop-in demo: the card mounts with .ap-modal-pop so the spring plays once
+  var pop = document.getElementById('popbtn');
+  pop.addEventListener('click', function () {
+    var host = document.getElementById('pop-host');
+    host.innerHTML = '<div class="ap-scrim ap-scrim-fade" id="pop-scrim"></div>' +
+      '<div class="ap-modal ap-modal-pop" role="dialog" aria-modal="true" aria-label="弹簧弹入">' +
+      '<h2 class="ap-modal-title">弹入的卡片</h2>' +
+      '<p class="ap-text-sm ap-muted" style="margin-bottom:16px">scale .94 → 1，bouncy 弹簧负责落位。</p>' +
+      '<button class="ap-btn ap-btn-primary ap-btn-sm" id="pop-close">关闭</button></div>';
+    document.getElementById('pop-close').addEventListener('click', close);
+    document.getElementById('pop-scrim').addEventListener('click', close);
+  });
+  function close() { document.getElementById('pop-host').innerHTML = ''; }
 </script>
 </body>
 </html>

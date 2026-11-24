@@ -24,8 +24,11 @@ The result is Apple-like when all of these hold:
 4. **Shadows are almost absent.** Nothing darker than `0 4px 12px rgba(0,0,0,.08)`, and only on
    floating elements (nav menus, sheets, hovered cards). Product imagery never gets a shadow.
 5. **Corners are systematic.** 8 / 12 / 18 / 28px or a full pill (980px). No ad-hoc radii.
-6. **Motion is quiet.** 200–400ms ease-out, 2–4px translation, opacity fades. No bounce, no
-   spin-in, no parallax beyond a slow image scale on hover.
+6. **Motion is quiet — but it is spring-loaded.** Two layers, never mixed up:
+   *state changes* are 160–400ms beziers (`--ap-ease`), and *physical give* is a damped spring
+   (`--ap-spring-*`) that overshoots by at most 4% and settles within 500ms. Springs drive
+   `transform`/`opacity` only; colour and shadow never spring. No spin-in, no parallax beyond a
+   slow image scale on hover.
 7. **Whitespace is the layout.** Sections pad 64–96px vertically on desktop; content max-width
    980px (text) or 1440px (grids); nothing touches the viewport edge closer than 20px on mobile.
 
@@ -80,7 +83,8 @@ heavy shadows mechanically. Iterate until the audit is clean and the screenshots
 | Hero | §4 | centered, display 48–80px, 8–16px subhead `#6e6e73`, image below the fold line |
 | Input / select | §5 | 12px radius, `#f5f5f7` fill or 1px `#d2d2d7`, focus ring 2px `#0071e3` |
 | Badge / chip | §6 | pill, 12px, `#f5f5f7` bg, `#6e6e73` text, or blue-tinted for "new" |
-| Modal / sheet | §7 | radius 18–28px, `rgba(255,255,255,.92)` + `saturate(180%) blur(20px)`, `0 8px 24px rgba(0,0,0,.10)` |
+| Modal / sheet | §7 | radius 18–28px, `rgba(255,255,255,.92)` + `saturate(180%) blur(20px)`, `0 8px 24px rgba(0,0,0,.10)`, enter on `--ap-spring-bouncy` |
+| Press / pop / reveal | §3 of motion ref | `--ap-spring-snappy` (327ms, peak 1.015), `--ap-spring-bouncy` (363ms, 1.038), `--ap-spring-gentle` (471ms, 1.002) |
 | Footer | §8 | `#f5f5f7`, 12px `#6e6e73` links in columns, hairline separators |
 
 ## 3. Verification checklist
@@ -96,6 +100,8 @@ Check every item against a screenshot, not against the code:
 - [ ] Section rhythm is a multiple of 8; vertical padding 64–96px desktop.
 - [ ] Nav is translucent with blur over scrolling content; it never becomes a solid gray bar.
 - [ ] Hover states exist for every interactive element and are color/opacity only (plus ≤2px lift).
+- [ ] Every press/enter animation uses a `--ap-spring-*` token with its own `-dur` token; no
+      hand-written overshoot bezier, no spring on colour, overshoot ≤ 4%.
 - [ ] Focus ring visible: 2px `#0071e3` with 1px offset.
 - [ ] Dark mode (if present) uses `#000` canvas, `#1d1d1f` surfaces, `#f5f5f7` text.
 - [ ] No emoji icons, no all-caps headings, no gradients except one optional soft hero wash.
@@ -111,7 +117,11 @@ Check every item against a screenshot, not against the code:
 - Drop shadows with y-offset > 8px or blur > 12px.
 - Dense 100%-width tables with grid lines; Apple uses whitespace and hairlines.
 - Icons with mismatched stroke weights; use one icon set at 1.5–2px stroke.
-- Motion with bounce, spring overshoot, or duration > 500ms.
+- Overshoot beziers such as `cubic-bezier(.34,1.56,.64,1)`: that is a fake bounce with no settle
+  phase. Real springs are `linear()` stop lists — use `--ap-spring-*`.
+- Overshoot above ~4% (peak > 1.04) or a spring that takes longer than 500ms to settle; both read
+  as a game UI rather than iOS.
+- Springing a colour, background or shadow, or springing anything that loops or is scroll-linked.
 
 ## 5. Framework notes
 
@@ -135,6 +145,7 @@ Check every item against a screenshot, not against the code:
 | `assets/preview-hero.png`, `assets/preview-forms.png` | Rendered reference of demo.html (light mode) |
 | `references/design-tokens.md` | Every measured token, light + dark, with sources |
 | `references/components.md` | Component recipes with markup and CSS |
-| `references/motion-and-materials.md` | Blur/translucency, elevation, motion curves |
+| `references/motion-and-materials.md` | Blur/translucency, elevation, the two-layer motion system |
 | `references/workflow.md` | Inventory commands, migration order, QA procedure |
-| `scripts/audit-apple-style.mjs` | Static audit for off-system colors, radii, shadows |
+| `scripts/audit-apple-style.mjs` | Static audit for off-system colors, radii, shadows, durations |
+| `scripts/spring-easing.mjs` | Generates the `--ap-spring-*` `linear()` curves from Apple's `Spring(duration:bounce:)` |

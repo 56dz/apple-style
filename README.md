@@ -17,6 +17,7 @@
 | `references/motion-and-materials.md` | 毛玻璃材质分级、阴影层级、动效曲线与上限 |
 | `references/workflow.md` | 盘点命令、8 步迁移顺序、框架特化说明、QA 流程、迁移陷阱 |
 | `scripts/audit-apple-style.mjs` | 静态审查：越界颜色 / 圆角 / 阴影 / 字体 / 过渡时长 / 装饰性渐变 |
+| `scripts/spring-easing.mjs` | 由 SwiftUI `Spring(duration:bounce:)` 参数生成 CSS `linear()` 弹簧曲线（`--ap-spring-*`） |
 
 ## 关键令牌（实测，非印象）
 
@@ -31,6 +32,7 @@
 | 字距 | 标题 -.022em ~ -.009em，正文 -.022em（CJK 归零） |
 | 圆角 | 0 / 3 / 4 / 5 / 6 / 8 / 10 / 12 / 18 / 20 / 28 / 980px(pill) |
 | 阴影 | 最重 `0 8px 24px rgba(0,0,0,.10)`，只在浮层与 hover 上 |
+| 弹簧 | snappy 327ms/峰值 1.015、smooth 351ms/1.000、bouncy 363ms/1.038、gentle 471ms/1.002 |
 | 断点 | 1068 / 734 / 480px |
 
 ## 用法
@@ -64,6 +66,26 @@ agent 会按 `SKILL.md` 的流程走：先盘点现有配色/圆角/阴影 → �
 module.exports = { presets: [require('./assets/tailwind-apple.js')], content: ['./src/**/*.{html,jsx,tsx,vue}'] }
 ```
 
+### 弹簧曲线（q弹）
+
+iOS 那种「按下去会回弹」的手感来自阻尼弹簧，不是贝塞尔曲线——贝塞尔做不出「越过终点再落回」。
+`apple.css` 里预置了四条由 Apple 的 `Spring(duration:bounce:)` 参数编译成的 `linear()` 曲线：
+
+```css
+.ap-press{transition:transform var(--ap-spring-snappy-dur) var(--ap-spring-snappy)}
+.ap-press:active{transform:scale(.96)}
+```
+
+改参数后重新生成，不要手改数值：
+
+```bash
+node scripts/spring-easing.mjs                          # 四条曲线 + 落位时间 + 峰值
+node scripts/spring-easing.mjs --bounce .2 --response .3 # 单条
+node scripts/spring-easing.mjs --css                    # 直接输出 :root 令牌块
+```
+
+约束：峰值 ≤ 1.04、落位 ≤ 500ms、只驱动 transform/opacity；颜色与阴影仍走 160–400ms 缓动。
+
 ### 审查已有项目
 
 ```bash
@@ -81,6 +103,7 @@ node scripts/audit-apple-style.mjs ./src --json   # 机器可读
 
 ![hero](assets/preview-hero.png)
 ![forms](assets/preview-forms.png)
+![motion](assets/preview-motion.png)
 
 直接打开 `assets/demo.html` 可以看到完整组件与深浅色切换。
 
